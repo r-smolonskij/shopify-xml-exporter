@@ -1,6 +1,7 @@
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { basename } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { getConfig } from './config.js';
 import { exportFeeds } from './exporter.js';
 
@@ -10,7 +11,7 @@ let configError;
 let feedRoutes = [];
 let refreshInProgress = false;
 
-const server = createServer(async (request, response) => {
+export async function handleRequest(request, response) {
   const url = new URL(request.url, `http://${request.headers.host}`);
 
   if (url.pathname === '/' && ['GET', 'HEAD'].includes(request.method)) {
@@ -56,9 +57,19 @@ const server = createServer(async (request, response) => {
     response.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
     response.end('Failed to read XML feed.\n');
   }
-});
+}
 
-server.listen(port, () => {
+export default handleRequest;
+
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  const server = createServer(handleRequest);
+
+  server.listen(port, () => {
+    startRefreshScheduler();
+  });
+}
+
+function startRefreshScheduler() {
   const activeConfig = loadServerConfig();
 
   if (!activeConfig) {
@@ -71,7 +82,7 @@ server.listen(port, () => {
   }
 
   scheduleNextRefresh();
-});
+}
 
 function scheduleNextRefresh(now = new Date()) {
   const nextRefresh = nextRefreshDate(loadServerConfig().feedRefreshTime, now);
