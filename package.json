@@ -1,0 +1,20 @@
+{
+  "name": "shopify-xml-exporter",
+  "version": "1.0.1",
+  "description": "Export Shopify products to a price comparison XML feed.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node src/server.js",
+    "export": "node src/index.js",
+    "serve": "node src/server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "fast-xml-parser": "^4.5.1"
+  }
+}

@@ -1,0 +1,111 @@
+# Shopify XML Exporter
+
+Clean Node.js CLI project that fetches published products from the Shopify Admin GraphQL API and writes XML feeds.
+
+## Setup
+
+```bash
+npm install
+cp .env.example .env
+```
+
+Fill `.env`:
+
+- `SHOPIFY_SHOP_DOMAIN`: Shopify admin domain, for example `my-store.myshopify.com`.
+- `SHOPIFY_ADMIN_ACCESS_TOKEN`: Admin API access token with `read_products` access scope.
+- `SHOPIFY_APP_CONFIG`: Shopify CLI app config file. Default is `shopify.app.products-get-new.toml`.
+- `SHOPIFY_STORE_URL`: public storefront base URL, for example `https://example.lv`. If omitted, the exporter uses `application_url` from the Shopify app config.
+- `SHOPIFY_API_VERSION`: Shopify Admin GraphQL API version. If omitted, the exporter uses `[webhooks].api_version` from the Shopify app config, then `2026-04`.
+- `SHOPIFY_LOCALE`: Shopify translation locale used for product exports. Default is `lv`.
+- `SALIDZINI_OUTPUT_FILE`: Salidzini XML output file. Default is `public/miglavita_salidzini.xml`.
+- `KURPIRKT_OUTPUT_FILE`: Kurpirkt XML output file. Default is `public/miglavita_kurpirkt.xml`.
+- `FEED_REFRESH_TIME`: daily server refresh time in `HH:mm` format. Default is `05:00`.
+
+The exporter uses the GraphQL `products` query with `status:active published_status:published`. The app config must include `read_products` and `read_translations` in `[access_scopes].scopes`.
+
+The Shopify app config does not contain the shop's `.myshopify.com` domain or Admin API access token. Keep these values in `.env`:
+
+```env
+SHOPIFY_SHOP_DOMAIN=your-shop.myshopify.com
+SHOPIFY_ADMIN_ACCESS_TOKEN=shpat_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+## Run
+
+```bash
+npm run export
+```
+
+Default outputs:
+
+```text
+public/miglavita_salidzini.xml
+public/miglavita_kurpirkt.xml
+```
+
+You can override it:
+
+```bash
+SALIDZINI_OUTPUT_FILE=salidzini.xml KURPIRKT_OUTPUT_FILE=kurpirkt.xml npm run export
+```
+
+## Public Route
+
+After generating the XML, start the server:
+
+```bash
+npm start
+```
+
+The feeds are available at:
+
+```text
+/miglavita_salidzini.xml
+/miglavita_kurpirkt.xml
+```
+
+While the server is running, both XML files are refreshed once per day at `FEED_REFRESH_TIME` using the server's local timezone.
+
+## XML Fields
+
+The exporter creates one XML `<item>` per Shopify variant. This keeps price, stock, SKU, barcode and variant color/model data accurate.
+
+Salidzini generated tags:
+
+- `name`: product title plus variant title, limited to 200 characters.
+- `link`: storefront product URL, with variant query parameter when available.
+- `price`: variant price in EUR-style decimal format.
+- `category_full`: Shopify product category full name, then product type, then first collection title.
+- `category_link`: first collection URL.
+- `image`: variant image, otherwise product image.
+- `in_stock`: variant inventory quantity when available.
+- `brand`: Shopify vendor.
+- `model`: model metafield when present, otherwise variant title when it is not `Default Title`.
+- `color`: color metafield when present, otherwise Color/Krasa selected option.
+- `mpn`: MPN metafield when present, otherwise SKU.
+- `ean`: EAN metafield when present, otherwise barcode.
+- `used`: from `DEFAULT_USED`.
+- `adult`: from `DEFAULT_ADULT`.
+- `over_the_counter_medicine`: from `DEFAULT_OVER_THE_COUNTER_MEDICINE`.
+
+Optional empty values are omitted, except `image`, which is emitted as an empty tag when the product has no image.
+
+Kurpirkt generated tags:
+
+- `name`: product title plus variant title, limited to 200 characters.
+- `link`: storefront product URL, with variant query parameter when available.
+- `price`: variant price in EUR-style decimal format.
+- `image`: variant image, otherwise product image.
+- `manufacturer`: Shopify vendor.
+- `category`: last category segment from `category_full`.
+- `category_full`: Shopify product category full name, then product type, then first collection title.
+- `category_link`: first collection URL.
+- `in_stock`: variant inventory quantity when available.
+- `delivery_cost_riga`: same value as Salidzini delivery price, currently `2.49`.
+- `used`: from `DEFAULT_USED`.
+
+## Tests
+
+```bash
+npm test
+```
