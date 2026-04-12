@@ -15,6 +15,15 @@ let refreshInProgress = false;
 const server = createServer(async (request, response) => {
   const url = new URL(request.url, `http://${request.headers.host}`);
 
+  if (url.pathname === '/' && ['GET', 'HEAD'].includes(request.method)) {
+    response.writeHead(200, {
+      'Cache-Control': 'public, max-age=300',
+      'Content-Type': 'text/html; charset=utf-8',
+    });
+    response.end(request.method === 'HEAD' ? undefined : '<!doctype html><title>Miglavita.eu API</title><p>Miglavita.eu API</p>');
+    return;
+  }
+
   const feed = feedRoutes.find((candidate) => candidate.route === url.pathname);
 
   if (!['GET', 'HEAD'].includes(request.method) || !feed) {
