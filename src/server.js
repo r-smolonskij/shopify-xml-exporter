@@ -4,12 +4,10 @@ import { basename } from 'node:path';
 import { getConfig } from './config.js';
 import { exportFeeds } from './exporter.js';
 
-const config = getConfig();
 const port = Number(process.env.PORT || 3000);
-const feedRoutes = config.feeds.map((feed) => ({
-  ...feed,
-  route: `/${basename(feed.outputFile)}`,
-}));
+let config;
+let configError;
+let feedRoutes = [];
 let refreshInProgress = false;
 
 const server = createServer(async (request, response) => {
@@ -21,6 +19,14 @@ const server = createServer(async (request, response) => {
       'Content-Type': 'text/html; charset=utf-8',
     });
     response.end(request.method === 'HEAD' ? undefined : '<!doctype html><title>Miglavita.eu API</title><p>Miglavita.eu API</p>');
+    return;
+  }
+
+  const activeConfig = loadServerConfig();
+
+  if (!activeConfig) {
+    response.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
+    response.end(`Server configuration error: ${configError.message}\n`);
     return;
   }
 
@@ -53,6 +59,13 @@ const server = createServer(async (request, response) => {
 });
 
 server.listen(port, () => {
+  const activeConfig = loadServerConfig();
+
+  if (!activeConfig) {
+    console.error(`XML feed routes are unavailable: ${configError.message}`);
+    return;
+  }
+
   for (const feed of feedRoutes) {
     console.log(`${feed.name} XML feed available at http://localhost:${port}${feed.route}`);
   }
@@ -61,7 +74,7 @@ server.listen(port, () => {
 });
 
 function scheduleNextRefresh(now = new Date()) {
-  const nextRefresh = nextRefreshDate(config.feedRefreshTime, now);
+  const nextRefresh = nextRefreshDate(loadServerConfig().feedRefreshTime, now);
   const delay = nextRefresh.getTime() - now.getTime();
 
   console.log(`Next XML feed refresh scheduled at ${nextRefresh.toString()}`);
@@ -73,6 +86,13 @@ function scheduleNextRefresh(now = new Date()) {
 }
 
 async function refreshFeed() {
+  const activeConfig = loadServerConfig();
+
+  if (!activeConfig) {
+    console.error(`Skipping XML feed refresh: ${configError.message}`);
+    return;
+  }
+
   if (refreshInProgress) {
     console.warn('Skipping XML feed refresh because a previous refresh is still running');
     return;
@@ -81,7 +101,7 @@ async function refreshFeed() {
   refreshInProgress = true;
 
   try {
-    const result = await exportFeeds(config);
+    const result = await exportFeeds(activeConfig);
 
     for (const output of result.outputs) {
       console.log(`Refreshed ${output.itemCount} ${output.name} items in ${output.outputFile}`);
@@ -114,4 +134,22 @@ function parseRefreshTime(time) {
   }
 
   return [Number(match[1]), Number(match[2])];
+}
+
+function loadServerConfig() {
+  if (config || configError) {
+    return config;
+  }
+
+  try {
+    config = getConfig();
+    feedRoutes = config.feeds.map((feed) => ({
+      ...feed,
+      route: `/${basename(feed.outputFile)}`,
+    }));
+  } catch (error) {
+    configError = error;
+  }
+
+  return config;
 }
