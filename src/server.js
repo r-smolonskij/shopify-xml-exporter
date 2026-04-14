@@ -1,9 +1,9 @@
 import { createServer } from 'node:http';
-import { readFile } from 'node:fs/promises';
 import { basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { getConfig } from './config.js';
 import { exportFeeds } from './exporter.js';
+import { readFeedXml } from './feed-store.js';
 
 const port = Number(process.env.PORT || 3000);
 let config;
@@ -13,6 +13,11 @@ let refreshInProgress = false;
 
 export async function handleRequest(request, response) {
   const url = new URL(request.url, `http://${request.headers.host}`);
+
+  if (url.pathname === '/api/cron/refresh') {
+    await handleCronRefresh(request, response);
+    return;
+  }
 
   if (url.pathname === '/' && ['GET', 'HEAD'].includes(request.method)) {
     response.writeHead(200, {
@@ -40,7 +45,9 @@ export async function handleRequest(request, response) {
   }
 
   try {
-    const xml = await readFile(feed.outputFile, 'utf8');
+    const xml = await readFeedXml(feed.outputFile, {
+      allowFileFallback: !process.env.VERCEL,
+    });
 
     response.writeHead(200, {
       'Cache-Control': 'public, max-age=300',
@@ -48,6 +55,40 @@ export async function handleRequest(request, response) {
     });
     response.end(request.method === 'HEAD' ? undefined : xml);
   } catch (error) {
+    if (error.code === 'CACHE_MISS' && process.env.VERCEL) {
+      try {
+        await refreshFeed();
+
+        const refreshedXml = await readFeedXml(feed.outputFile, {
+          allowFileFallback: false,
+        });
+
+        response.writeHead(200, {
+          'Cache-Control': 'public, max-age=300',
+          'Content-Type': 'application/xml; charset=utf-8',
+        });
+        response.end(request.method === 'HEAD' ? undefined : refreshedXml);
+        return;
+      } catch (refreshError) {
+        console.error(`Failed to refresh XML feed cache: ${refreshError.message}`);
+
+        try {
+          const fallbackXml = await readFeedXml(feed.outputFile, {
+            allowFileFallback: true,
+          });
+
+          response.writeHead(200, {
+            'Cache-Control': 'public, max-age=300',
+            'Content-Type': 'application/xml; charset=utf-8',
+          });
+          response.end(request.method === 'HEAD' ? undefined : fallbackXml);
+          return;
+        } catch (fallbackError) {
+          console.error(`Failed to read fallback XML feed: ${fallbackError.message}`);
+        }
+      }
+    }
+
     if (error.code === 'ENOENT') {
       response.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
       response.end(`XML feed file not found. Run npm run export first.\n`);
@@ -91,7 +132,16 @@ function scheduleNextRefresh(now = new Date()) {
   console.log(`Next XML feed refresh scheduled at ${nextRefresh.toString()}`);
 
   setTimeout(async () => {
-    await refreshFeed();
+    try {
+      const result = await refreshFeed();
+
+      for (const output of result.outputs) {
+        console.log(`Refreshed ${output.itemCount} ${output.name} items in ${output.outputFile}`);
+      }
+    } catch (error) {
+      console.error(`Failed to refresh XML feed: ${error.message}`);
+    }
+
     scheduleNextRefresh();
   }, delay);
 }
@@ -100,28 +150,85 @@ async function refreshFeed() {
   const activeConfig = loadServerConfig();
 
   if (!activeConfig) {
-    console.error(`Skipping XML feed refresh: ${configError.message}`);
-    return;
+    throw configError;
   }
 
   if (refreshInProgress) {
-    console.warn('Skipping XML feed refresh because a previous refresh is still running');
-    return;
+    const error = new Error('A refresh is already in progress');
+    error.code = 'REFRESH_IN_PROGRESS';
+    throw error;
   }
 
   refreshInProgress = true;
 
   try {
-    const result = await exportFeeds(activeConfig);
+    return await exportFeeds(activeConfig);
+  } finally {
+    refreshInProgress = false;
+  }
+}
+
+async function handleCronRefresh(request, response) {
+  if (!['GET', 'HEAD'].includes(request.method)) {
+    response.writeHead(405, {
+      Allow: 'GET, HEAD',
+      'Content-Type': 'text/plain; charset=utf-8',
+    });
+    response.end('Method not allowed.\n');
+    return;
+  }
+
+  if (!isAuthorizedCronRequest(request)) {
+    response.writeHead(401, { 'Content-Type': 'text/plain; charset=utf-8' });
+    response.end('Unauthorized.\n');
+    return;
+  }
+
+  try {
+    const result = await refreshFeed();
 
     for (const output of result.outputs) {
       console.log(`Refreshed ${output.itemCount} ${output.name} items in ${output.outputFile}`);
     }
+
+    response.writeHead(200, {
+      'Cache-Control': 'no-store',
+      'Content-Type': 'application/json; charset=utf-8',
+    });
+    response.end(
+      request.method === 'HEAD'
+        ? undefined
+        : JSON.stringify({
+            ok: true,
+            refreshedAt: new Date().toISOString(),
+            outputs: result.outputs.map((output) => ({
+              name: output.name,
+              itemCount: output.itemCount,
+              outputFile: output.outputFile,
+            })),
+          }),
+    );
   } catch (error) {
+    if (error.code === 'REFRESH_IN_PROGRESS') {
+      response.writeHead(409, { 'Content-Type': 'text/plain; charset=utf-8' });
+      response.end(`${error.message}.\n`);
+      return;
+    }
+
     console.error(`Failed to refresh XML feed: ${error.message}`);
-  } finally {
-    refreshInProgress = false;
+    response.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
+    response.end('Failed to refresh XML feed.\n');
   }
+}
+
+export function isAuthorizedCronRequest(request, env = process.env) {
+  const secret = env.CRON_SECRET;
+
+  if (!secret) {
+    return false;
+  }
+
+  return request.headers.authorization === `Bearer ${secret}`;
 }
 
 function nextRefreshDate(time, now) {

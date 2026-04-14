@@ -10,14 +10,24 @@
       "use": "@vercel/node"
     }
   ],
+  "crons": [
+    {
+      "path": "/api/cron/refresh",
+      "schedule": "0 5 * * *"
+    }
+  ],
   "routes": [
     {
       "src": "/",
       "dest": "/public/index.html"
     },
     {
+      "src": "/api/cron/refresh",
+      "dest": "/src/server.js"
+    },
+    {
       "src": "/(.+\\.xml)",
-      "dest": "/public/$1"
+      "dest": "/src/server.js"
     },
     {
       "src": "/(.*)",

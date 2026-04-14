@@ -1,6 +1,5 @@
-import { mkdir, writeFile } from 'node:fs/promises';
-import { dirname } from 'node:path';
 import { fetchProducts } from './shopify.js';
+import { writeFeedXml } from './feed-store.js';
 import {
   feedItemsToKurpirktItems,
   productsToFeedItems,
@@ -19,8 +18,7 @@ export async function exportFeeds(config) {
     const items = formatFeedItems(baseItems, feed.format);
     const xml = buildXml(items);
 
-    await mkdir(dirname(feed.outputFile), { recursive: true });
-    await writeFile(feed.outputFile, xml, 'utf8');
+    await writeFeedXml(feed.outputFile, xml);
 
     outputs.push({
       name: feed.name,

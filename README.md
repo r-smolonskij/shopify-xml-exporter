@@ -20,6 +20,7 @@ Fill `.env`:
 - `SALIDZINI_OUTPUT_FILE`: Salidzini XML output file. Default is `public/miglavita_salidzini.xml`.
 - `KURPIRKT_OUTPUT_FILE`: Kurpirkt XML output file. Default is `public/miglavita_kurpirkt.xml`.
 - `FEED_REFRESH_TIME`: daily server refresh time in `HH:mm` format. Default is `05:00`.
+- `CRON_SECRET`: shared secret used by the Vercel cron endpoint.
 
 The exporter uses the GraphQL `products` query with `status:active published_status:published`. The app config must include `read_products` and `read_translations` in `[access_scopes].scopes`.
 
@@ -64,7 +65,12 @@ The feeds are available at:
 /miglavita_kurpirkt.xml
 ```
 
-While the server is running, both XML files are refreshed once per day at `FEED_REFRESH_TIME` using the server's local timezone.
+On Vercel, both XML files are refreshed by a cron job that calls `GET /api/cron/refresh`.
+Vercel cron schedules run in UTC, so the current schedule is `0 5 * * *`.
+If you want a different time, update `crons` in [`vercel.json`](vercel.json).
+
+The refresh endpoint requires `Authorization: Bearer $CRON_SECRET`.
+Set `CRON_SECRET` in your Vercel environment before enabling the cron job.
 
 ## XML Fields
 
