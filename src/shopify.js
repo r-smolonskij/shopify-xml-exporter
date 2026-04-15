@@ -73,15 +73,21 @@ const PRODUCTS_QUERY = `
 `;
 
 export async function fetchProducts(config) {
+  const accessToken = await getShopifyAccessToken(config);
   const products = [];
   let cursor = null;
   let hasNextPage = true;
 
   while (hasNextPage) {
-    const data = await shopifyGraphql(config, PRODUCTS_QUERY, {
-      cursor,
-      locale: config.locale,
-    });
+    const data = await shopifyGraphql(
+      config,
+      PRODUCTS_QUERY,
+      {
+        cursor,
+        locale: config.locale,
+      },
+      accessToken,
+    );
 
     const connection = data.products;
     products.push(...connection.nodes);
@@ -92,14 +98,14 @@ export async function fetchProducts(config) {
   return products;
 }
 
-async function shopifyGraphql(config, query, variables) {
+async function shopifyGraphql(config, query, variables, accessToken) {
   const response = await fetch(
     `https://${config.shopDomain}/admin/api/${config.apiVersion}/graphql.json`,
     {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-Shopify-Access-Token': config.adminAccessToken,
+        'X-Shopify-Access-Token': accessToken,
       },
       body: JSON.stringify({ query, variables }),
     },
@@ -118,4 +124,32 @@ async function shopifyGraphql(config, query, variables) {
   }
 
   return payload.data;
+}
+
+async function getShopifyAccessToken(config) {
+  const response = await fetch(`https://${config.shopDomain}/admin/oauth/access_token`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({
+      client_id: config.shopifyClientId,
+      client_secret: config.shopifyClientSecret,
+      grant_type: 'client_credentials',
+    }),
+  });
+
+  const payload = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    throw new Error(
+      `Shopify access token request failed with ${response.status}: ${JSON.stringify(payload)}`,
+    );
+  }
+
+  if (!payload?.access_token) {
+    throw new Error(`Shopify access token response missing access_token: ${JSON.stringify(payload)}`);
+  }
+
+  return payload.access_token;
 }

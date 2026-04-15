@@ -12,7 +12,7 @@ cp .env.example .env
 Fill `.env`:
 
 - `SHOPIFY_SHOP_DOMAIN`: Shopify admin domain, for example `my-store.myshopify.com`.
-- `SHOPIFY_ADMIN_ACCESS_TOKEN`: Admin API access token with `read_products` access scope.
+- `SHOPIFY_APP_SECRET`: Shopify app secret used to exchange for a short-lived Admin API access token.
 - `SHOPIFY_APP_CONFIG`: Shopify CLI app config file. Default is `shopify.app.products-get-new.toml`.
 - `SHOPIFY_STORE_URL`: public storefront base URL, for example `https://example.lv`. If omitted, the exporter uses `application_url` from the Shopify app config.
 - `SHOPIFY_API_VERSION`: Shopify Admin GraphQL API version. If omitted, the exporter uses `[webhooks].api_version` from the Shopify app config, then `2026-04`.
@@ -24,11 +24,11 @@ Fill `.env`:
 
 The exporter uses the GraphQL `products` query with `status:active published_status:published`. The app config must include `read_products` and `read_translations` in `[access_scopes].scopes`.
 
-The Shopify app config does not contain the shop's `.myshopify.com` domain or Admin API access token. Keep these values in `.env`:
+The Shopify app config contains `client_id`, but not the shop's `.myshopify.com` domain or app secret. Keep these values in `.env`:
 
 ```env
 SHOPIFY_SHOP_DOMAIN=your-shop.myshopify.com
-SHOPIFY_ADMIN_ACCESS_TOKEN=shpat_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+SHOPIFY_APP_SECRET=shps_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
 ## Run
@@ -68,6 +68,8 @@ The feeds are available at:
 On Vercel, both XML files are refreshed by a cron job that calls `GET /api/cron/refresh`.
 Vercel cron schedules run in UTC, so the current schedule is `0 5 * * *`.
 If you want a different time, update `crons` in [`vercel.json`](vercel.json).
+
+Before each export or refresh, the app exchanges the app secret for a short-lived Admin API access token using `POST /admin/oauth/access_token`.
 
 The refresh endpoint requires `Authorization: Bearer $CRON_SECRET`.
 Set `CRON_SECRET` in your Vercel environment before enabling the cron job.

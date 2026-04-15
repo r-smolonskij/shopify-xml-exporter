@@ -14,6 +14,7 @@ test('uses Shopify app TOML for API version, store URL, and scope validation', a
   });
 
   await writeFile(appConfigPath, `
+client_id = "d614a86da29a56774663967f24068f0a"
 application_url = "https://example.lv"
 
 [webhooks]
@@ -26,7 +27,7 @@ scopes = "read_products,read_translations"
   const config = getConfig({
     SHOPIFY_APP_CONFIG: appConfigPath,
     SHOPIFY_SHOP_DOMAIN: 'example.myshopify.com',
-    SHOPIFY_ADMIN_ACCESS_TOKEN: 'shpat_test',
+    SHOPIFY_APP_SECRET: 'shps_test',
   });
 
   assert.equal(config.storeUrl, 'https://example.lv');
@@ -47,6 +48,7 @@ test('environment values override Shopify app TOML defaults', async (t) => {
   });
 
   await writeFile(appConfigPath, `
+client_id = "d614a86da29a56774663967f24068f0a"
 application_url = "https://example.lv"
 
 [webhooks]
@@ -59,7 +61,7 @@ scopes = "read_products,read_translations"
   const config = getConfig({
     SHOPIFY_APP_CONFIG: appConfigPath,
     SHOPIFY_SHOP_DOMAIN: 'example.myshopify.com',
-    SHOPIFY_ADMIN_ACCESS_TOKEN: 'shpat_test',
+    SHOPIFY_APP_SECRET: 'shps_test',
     SHOPIFY_STORE_URL: 'https://store.example.lv/',
     SHOPIFY_API_VERSION: '2025-10',
     SHOPIFY_LOCALE: 'en',
@@ -86,6 +88,7 @@ test('requires product and translation scopes when Shopify app TOML scopes are p
   });
 
   await writeFile(appConfigPath, `
+client_id = "d614a86da29a56774663967f24068f0a"
 [access_scopes]
 scopes = "read_product_listings"
 `, 'utf8');
@@ -93,7 +96,7 @@ scopes = "read_product_listings"
   assert.throws(() => getConfig({
     SHOPIFY_APP_CONFIG: appConfigPath,
     SHOPIFY_SHOP_DOMAIN: 'example.myshopify.com',
-    SHOPIFY_ADMIN_ACCESS_TOKEN: 'shpat_test',
+    SHOPIFY_APP_SECRET: 'shps_test',
     SHOPIFY_STORE_URL: 'https://example.lv',
   }), /read_products, read_translations/);
 });

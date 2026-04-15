@@ -4,7 +4,8 @@ import { fetchProducts } from '../src/shopify.js';
 
 const config = {
   shopDomain: 'example.myshopify.com',
-  adminAccessToken: 'shpat_test',
+  shopifyClientId: 'd614a86da29a56774663967f24068f0a',
+  shopifyClientSecret: 'shps_test',
   apiVersion: '2026-04',
   locale: 'lv',
   metafields: {
@@ -24,9 +25,19 @@ test('fetches Shopify GraphQL products with cursor pagination', async (t) => {
   });
 
   globalThis.fetch = async (url, options) => {
-    requests.push({ url, options, body: JSON.parse(options.body) });
+    const body = typeof options.body === 'string' && options.body.trim().startsWith('{')
+      ? JSON.parse(options.body)
+      : options.body;
+    requests.push({ url, options, body });
 
-    if (requests.length === 1) {
+    if (url.includes('/admin/oauth/access_token')) {
+      return jsonResponse({
+        access_token: 'shpat_test',
+        expires_in: 86399,
+      });
+    }
+
+    if (requests.length === 2) {
       return jsonResponse({
         data: {
           products: {
@@ -55,17 +66,32 @@ test('fetches Shopify GraphQL products with cursor pagination', async (t) => {
   ]);
   assert.equal(
     requests[0].url,
-    'https://example.myshopify.com/admin/api/2026-04/graphql.json',
+    'https://example.myshopify.com/admin/oauth/access_token',
   );
   assert.equal(requests[0].options.method, 'POST');
-  assert.equal(requests[0].options.headers['X-Shopify-Access-Token'], 'shpat_test');
-  assert.equal(requests[0].body.variables.cursor, null);
-  assert.equal(requests[1].body.variables.cursor, 'cursor-1');
-  assert.deepEqual(requests[0].body.variables, { cursor: null, locale: 'lv' });
-  assert.match(requests[0].body.query, /products\(first: 50, after: \$cursor/);
-  assert.match(requests[0].body.query, /collections\(first: 20\)/);
-  assert.match(requests[0].body.query, /translations\(locale: \$locale\)/);
-  assert.match(requests[0].body.query, /metafields\(first: 20\)/);
+  assert.equal(requests[0].options.headers['Content-Type'], 'application/x-www-form-urlencoded');
+  assert.deepEqual(
+    Object.fromEntries(new URLSearchParams(String(requests[0].options.body))),
+    {
+      client_id: 'd614a86da29a56774663967f24068f0a',
+      client_secret: 'shps_test',
+      grant_type: 'client_credentials',
+    },
+  );
+
+  assert.equal(
+    requests[1].url,
+    'https://example.myshopify.com/admin/api/2026-04/graphql.json',
+  );
+  assert.equal(requests[1].options.method, 'POST');
+  assert.equal(requests[1].options.headers['X-Shopify-Access-Token'], 'shpat_test');
+  assert.equal(requests[1].body.variables.cursor, null);
+  assert.equal(requests[2].body.variables.cursor, 'cursor-1');
+  assert.deepEqual(requests[1].body.variables, { cursor: null, locale: 'lv' });
+  assert.match(requests[1].body.query, /products\(first: 50, after: \$cursor/);
+  assert.match(requests[1].body.query, /collections\(first: 20\)/);
+  assert.match(requests[1].body.query, /translations\(locale: \$locale\)/);
+  assert.match(requests[1].body.query, /metafields\(first: 20\)/);
 });
 
 test('surfaces Shopify GraphQL errors', async (t) => {
@@ -75,9 +101,21 @@ test('surfaces Shopify GraphQL errors', async (t) => {
     globalThis.fetch = originalFetch;
   });
 
-  globalThis.fetch = async () => jsonResponse({
-    errors: [{ message: 'Access denied' }],
-  });
+  let callCount = 0;
+  globalThis.fetch = async (url) => {
+    callCount += 1;
+
+    if (callCount === 1) {
+      return jsonResponse({
+        access_token: 'shpat_test',
+        expires_in: 86399,
+      });
+    }
+
+    return jsonResponse({
+      errors: [{ message: 'Access denied' }],
+    });
+  };
 
   await assert.rejects(
     () => fetchProducts(config),

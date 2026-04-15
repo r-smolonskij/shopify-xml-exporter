@@ -13,9 +13,13 @@ const REQUIRED_SCOPES = ['read_products', 'read_translations'];
 export function getConfig(env = process.env) {
   const appConfig = loadShopifyAppConfig(env.SHOPIFY_APP_CONFIG || DEFAULT_SHOPIFY_APP_CONFIG);
   const shopDomain = required(env.SHOPIFY_SHOP_DOMAIN, 'SHOPIFY_SHOP_DOMAIN');
-  const adminAccessToken = required(
-    env.SHOPIFY_ADMIN_ACCESS_TOKEN,
-    'SHOPIFY_ADMIN_ACCESS_TOKEN',
+  const shopifyClientId = required(
+    env.SHOPIFY_API_KEY || appConfig.clientId,
+    'SHOPIFY_API_KEY or Shopify app config client_id',
+  );
+  const shopifyClientSecret = required(
+    env.SHOPIFY_APP_SECRET || env.SHOPIFY_CLIENT_SECRET,
+    'SHOPIFY_APP_SECRET or SHOPIFY_CLIENT_SECRET',
   );
   const storeUrl = trimTrailingSlash(
     required(env.SHOPIFY_STORE_URL || appConfig.applicationUrl, 'SHOPIFY_STORE_URL'),
@@ -26,7 +30,8 @@ export function getConfig(env = process.env) {
 
   return {
     shopDomain,
-    adminAccessToken,
+    shopifyClientId,
+    shopifyClientSecret,
     apiVersion,
     locale: env.SHOPIFY_LOCALE || DEFAULT_SHOPIFY_LOCALE,
     storeUrl,
@@ -68,6 +73,7 @@ function loadShopifyAppConfig(path) {
   const parsed = parseToml(readFileSync(resolvedPath, 'utf8'));
 
   return {
+    clientId: parsed.client_id,
     applicationUrl: parsed.application_url,
     apiVersion: parsed.webhooks?.api_version,
     scopes: parseScopes(parsed.access_scopes?.scopes),
