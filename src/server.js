@@ -55,38 +55,10 @@ export async function handleRequest(request, response) {
     });
     response.end(request.method === 'HEAD' ? undefined : xml);
   } catch (error) {
-    if (error.code === 'CACHE_MISS' && process.env.VERCEL) {
-      try {
-        await refreshFeed();
-
-        const refreshedXml = await readFeedXml(feed.outputFile, {
-          allowFileFallback: false,
-        });
-
-        response.writeHead(200, {
-          'Cache-Control': 'public, max-age=300',
-          'Content-Type': 'application/xml; charset=utf-8',
-        });
-        response.end(request.method === 'HEAD' ? undefined : refreshedXml);
-        return;
-      } catch (refreshError) {
-        console.error(`Failed to refresh XML feed cache: ${refreshError.message}`);
-
-        try {
-          const fallbackXml = await readFeedXml(feed.outputFile, {
-            allowFileFallback: true,
-          });
-
-          response.writeHead(200, {
-            'Cache-Control': 'public, max-age=300',
-            'Content-Type': 'application/xml; charset=utf-8',
-          });
-          response.end(request.method === 'HEAD' ? undefined : fallbackXml);
-          return;
-        } catch (fallbackError) {
-          console.error(`Failed to read fallback XML feed: ${fallbackError.message}`);
-        }
-      }
+    if (error.code === 'CACHE_MISS') {
+      response.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
+      response.end('XML feed cache is empty. Wait for the scheduled refresh or call /api/cron/refresh.\n');
+      return;
     }
 
     if (error.code === 'ENOENT') {
