@@ -236,7 +236,7 @@ test('maps feed items to Kurpirkt XML item shape', () => {
     category_full: 'Sakaru līdzekļi > Mobilie telefoni',
     category_link: 'https://www.example.lv/page.php?cat=12',
     in_stock: '5',
-    delivery_cost_riga: '2.49',
+    delivery_cost_riga: '0',
     used: '0',
   }]);
 });

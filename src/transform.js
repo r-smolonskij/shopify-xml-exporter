@@ -29,7 +29,7 @@ export function feedItemsToKurpirktItems(items) {
     category_full: item.category_full,
     category_link: item.category_link,
     in_stock: item.in_stock,
-    delivery_cost_riga: item.delivery_latvija,
+    delivery_cost_riga: '0',
     used: item.used,
   }, ['image']));
 }
