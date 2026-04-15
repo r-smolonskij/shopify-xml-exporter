@@ -14,8 +14,8 @@ export function getConfig(env = process.env) {
   const appConfig = loadShopifyAppConfig(env.SHOPIFY_APP_CONFIG || DEFAULT_SHOPIFY_APP_CONFIG);
   const shopDomain = required(env.SHOPIFY_SHOP_DOMAIN, 'SHOPIFY_SHOP_DOMAIN');
   const shopifyClientId = required(
-    env.SHOPIFY_API_KEY || appConfig.clientId,
-    'SHOPIFY_API_KEY or Shopify app config client_id',
+    env.SHOPIFY_CLIENT_ID || appConfig.clientId,
+    'SHOPIFY_CLIENT_ID, or Shopify app config client_id',
   );
   const shopifyClientSecret = required(
     env.SHOPIFY_APP_SECRET || env.SHOPIFY_CLIENT_SECRET,

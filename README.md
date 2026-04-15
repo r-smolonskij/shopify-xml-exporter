@@ -12,6 +12,7 @@ cp .env.example .env
 Fill `.env`:
 
 - `SHOPIFY_SHOP_DOMAIN`: Shopify admin domain, for example `my-store.myshopify.com`.
+- `SHOPIFY_CLIENT_ID`: Shopify app client ID. If omitted, the exporter falls back to `SHOPIFY_API_KEY` or `client_id` from the app config.
 - `SHOPIFY_APP_SECRET`: Shopify app secret used to exchange for a short-lived Admin API access token.
 - `SHOPIFY_APP_CONFIG`: Shopify CLI app config file. Default is `shopify.app.products-get-new.toml`.
 - `SHOPIFY_STORE_URL`: public storefront base URL, for example `https://example.lv`. If omitted, the exporter uses `application_url` from the Shopify app config.
@@ -28,6 +29,7 @@ The Shopify app config contains `client_id`, but not the shop's `.myshopify.com`
 
 ```env
 SHOPIFY_SHOP_DOMAIN=your-shop.myshopify.com
+SHOPIFY_CLIENT_ID=d614a86da29a56774663967f24068f0a
 SHOPIFY_APP_SECRET=shps_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
