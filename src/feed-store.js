@@ -2,7 +2,7 @@ import { getCache } from '@vercel/functions';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname } from 'node:path';
 
-const CACHE_NAMESPACE = 'shopify-xml-exporter';
+const CACHE_NAMESPACE = `shopify-xml-exporter:${process.env.VERCEL_GIT_COMMIT_SHA || 'local'}`;
 const CACHE_TTL_SECONDS = 60 * 60 * 24 * 30;
 
 let cache;
