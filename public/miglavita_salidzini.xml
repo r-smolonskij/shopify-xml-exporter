@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!-- generated_at: 2026-04-15T02:30:43.401Z -->
+<!-- generated_at: 2026-04-16T16:36:34.208Z -->
 <root>
   <item>
     <name>Berberīns (90 tabletes)</name>
@@ -115,21 +115,6 @@
     <category_link>https://miglavita.eu/collections/sleep</category_link>
     <image>https://cdn.shopify.com/s/files/1/0959/3664/3415/files/ostrovit-lions-mane.webp?v=1762768269</image>
     <in_stock>12</in_stock>
-    <brand>Ostrovit</brand>
-    <used>0</used>
-    <adult>no</adult>
-    <over_the_counter_medicine>0</over_the_counter_medicine>
-    <delivery_latvija>2.49</delivery_latvija>
-    <delivery_days_latvija>2</delivery_days_latvija>
-  </item>
-  <item>
-    <name>Teanīns/L-Theanine (90 kapsulas)</name>
-    <link>https://miglavita.eu/products/l-theanine-90-capsules?variant=52131114778967</link>
-    <price>6.99</price>
-    <category_full>Uztura bagātinātāji &gt;&gt; Vitamīni &gt;&gt; Veselība &gt;&gt; Miegam un stresa mazināšanai &gt;&gt; Veselības nostiprināšanai un imūnai sistēmai &gt;&gt; Enerģijai un izturībai &gt;&gt; Visi produkti &gt;&gt; Veģetāriešiem un vegāniem &gt;&gt; Zaļās tējas ekstrakts &gt;&gt; L-Teanīns &gt;&gt; Atlaides % &gt;&gt; Miega atbalsts &gt;&gt; Vitamīni vīriešiem &gt;&gt; Vitamīni sievietēm</category_full>
-    <category_link>https://miglavita.eu/collections/sleep</category_link>
-    <image>https://cdn.shopify.com/s/files/1/0959/3664/3415/files/teanins_1fc74b3e-9edb-44f9-a852-b8086a296666.webp?v=1762769358</image>
-    <in_stock>0</in_stock>
     <brand>Ostrovit</brand>
     <used>0</used>
     <adult>no</adult>
@@ -388,21 +373,6 @@
     <delivery_days_latvija>2</delivery_days_latvija>
   </item>
   <item>
-    <name>Inozīns 500mg (60 kapsulas)</name>
-    <link>https://miglavita.eu/products/inosine-500mg-60-capsules?variant=52174634058071</link>
-    <price>11.19</price>
-    <category_full>Uztura bagātinātāji &gt;&gt; Vitamīni &gt;&gt; Veselība &gt;&gt; Veselības nostiprināšanai un imūnai sistēmai &gt;&gt; Enerģijai un izturībai &gt;&gt; Spēkam un muskuļu masai &gt;&gt; Visi produkti &gt;&gt; Veģetāriešiem un vegāniem &gt;&gt; Atlaides % &gt;&gt; Vitamīni vīriešiem &gt;&gt; Vitamīni sievietēm</category_full>
-    <category_link>https://miglavita.eu/collections/vitamins</category_link>
-    <image>https://cdn.shopify.com/s/files/1/0959/3664/3415/files/inosine.webp?v=1763385171</image>
-    <in_stock>0</in_stock>
-    <brand>SWANSON</brand>
-    <used>0</used>
-    <adult>no</adult>
-    <over_the_counter_medicine>0</over_the_counter_medicine>
-    <delivery_latvija>2.49</delivery_latvija>
-    <delivery_days_latvija>2</delivery_days_latvija>
-  </item>
-  <item>
     <name>Sūkalu olbaltumvielas (700g) Cookie and Caramel</name>
     <link>https://miglavita.eu/products/whey-protein-700g?variant=52220314583383</link>
     <price>16.79</price>
@@ -498,21 +468,6 @@
     <delivery_days_latvija>2</delivery_days_latvija>
   </item>
   <item>
-    <name>BCAA + Glutamīns (500g)</name>
-    <link>https://miglavita.eu/products/bcaa-glutamine-500g?variant=52220469248343</link>
-    <price>16.79</price>
-    <category_full>Uztura bagātinātāji &gt;&gt; Vitamīni &gt;&gt; Veselība &gt;&gt; Enerģijai un izturībai &gt;&gt; Spēkam un muskuļu masai &gt;&gt; Visi produkti &gt;&gt; Elektrolīti &gt;&gt; Atlaides %</category_full>
-    <category_link>https://miglavita.eu/collections/energija-izturiba</category_link>
-    <image>https://cdn.shopify.com/s/files/1/0959/3664/3415/files/bcaa_glutamine.webp?v=1764082651</image>
-    <in_stock>0</in_stock>
-    <brand>Ostrovit</brand>
-    <used>0</used>
-    <adult>no</adult>
-    <over_the_counter_medicine>0</over_the_counter_medicine>
-    <delivery_latvija>2.49</delivery_latvija>
-    <delivery_days_latvija>2</delivery_days_latvija>
-  </item>
-  <item>
     <name>Gremošanai / Digestive Enzymes (90 tabletes)</name>
     <link>https://miglavita.eu/products/digezyme-digestive-enzymes-90-tablets?variant=52220794700119</link>
     <price>8.39</price>
@@ -543,29 +498,13 @@
     <delivery_days_latvija>2</delivery_days_latvija>
   </item>
   <item>
-    <name>Hidro liellopa proteīns (700 g) Cola</name>
-    <link>https://miglavita.eu/products/hydro-beef-protein-700g?variant=52220874588503</link>
-    <price>13.29</price>
-    <category_full>Uztura bagātinātāji &gt;&gt; Vitamīni &gt;&gt; Veselība &gt;&gt; Diētai un svara kontrolei &gt;&gt; Spēkam un muskuļu masai &gt;&gt; Visi produkti &gt;&gt; Proteīns &gt;&gt; Atlaides % &gt;&gt; Ēdiens &gt;&gt; Vitamīni vīriešiem &gt;&gt; Vitamīni sievietēm</category_full>
-    <category_link>https://miglavita.eu/collections/dieta</category_link>
-    <image>https://cdn.shopify.com/s/files/1/0959/3664/3415/files/beef.webp?v=1764084412</image>
-    <in_stock>0</in_stock>
-    <brand>Ostrovit</brand>
-    <model>Cola</model>
-    <used>0</used>
-    <adult>no</adult>
-    <over_the_counter_medicine>0</over_the_counter_medicine>
-    <delivery_latvija>2.49</delivery_latvija>
-    <delivery_days_latvija>2</delivery_days_latvija>
-  </item>
-  <item>
     <name>Melatonīns (300 tabletes)</name>
     <link>https://miglavita.eu/products/keep-sleep-melatonin-300-tablets?variant=52221003628887</link>
     <price>4.99</price>
     <category_full>Uztura bagātinātāji &gt;&gt; Vitamīni &gt;&gt; Veselība &gt;&gt; Miegam un stresa mazināšanai &gt;&gt; Veselības nostiprināšanai un imūnai sistēmai &gt;&gt; Visi produkti &gt;&gt; Veģetāriešiem un vegāniem &gt;&gt; Melatonīns &gt;&gt; Atlaides % &gt;&gt; Miega atbalsts &gt;&gt; Vitamīni vīriešiem &gt;&gt; Vitamīni sievietēm</category_full>
     <category_link>https://miglavita.eu/collections/sleep</category_link>
     <image>https://cdn.shopify.com/s/files/1/0959/3664/3415/files/melatonin-300_e0c98405-70b7-4989-a2f0-0960d9a05d48.webp?v=1764085706</image>
-    <in_stock>4</in_stock>
+    <in_stock>2</in_stock>
     <brand>Ostrovit</brand>
     <used>0</used>
     <adult>no</adult>
@@ -1000,21 +939,6 @@
     <delivery_days_latvija>2</delivery_days_latvija>
   </item>
   <item>
-    <name>Vita-Min One multivitamīni (60 kapsulas)</name>
-    <link>https://miglavita.eu/products/vita-min-one-multivitamins-60-capsules?variant=52230255444311</link>
-    <price>7.99</price>
-    <category_full>Uztura bagātinātāji &gt;&gt; Vitamīni &gt;&gt; Veselība &gt;&gt; Kaulu un locītavu veselība &gt;&gt; Veselības nostiprināšanai un imūnai sistēmai &gt;&gt; Enerģijai un izturībai &gt;&gt; Spēkam un muskuļu masai &gt;&gt; Visi produkti &gt;&gt; Magnijs &gt;&gt; Cinks &gt;&gt; B vitamīnu komplekss &gt;&gt; Dzelzs &gt;&gt; Kalcijs &gt;&gt; Biotīns &gt;&gt; Multivitamīni &gt;&gt; B12 vitamīns &gt;&gt; Atlaides % &gt;&gt; Vitamīni vīriešiem &gt;&gt; Vitamīni sievietēm</category_full>
-    <category_link>https://miglavita.eu/collections/joint-support</category_link>
-    <image>https://cdn.shopify.com/s/files/1/0959/3664/3415/files/OLN-VITON-WM-0060-XX-001-30001138-01.webp?v=1764177916</image>
-    <in_stock>0</in_stock>
-    <brand>OLIMP</brand>
-    <used>0</used>
-    <adult>no</adult>
-    <over_the_counter_medicine>0</over_the_counter_medicine>
-    <delivery_latvija>2.49</delivery_latvija>
-    <delivery_days_latvija>2</delivery_days_latvija>
-  </item>
-  <item>
     <name>MultiVit vīriešiem (60 kapsulas)</name>
     <link>https://miglavita.eu/products/multivit-for-men-60-capsules?variant=52230276251991</link>
     <price>5.49</price>
@@ -1386,37 +1310,6 @@
     <delivery_days_latvija>2</delivery_days_latvija>
   </item>
   <item>
-    <name>Spirulīna (90 kapsulas)</name>
-    <link>https://miglavita.eu/products/spirulina-90-capsules-1?variant=52262544114007</link>
-    <price>7.24</price>
-    <category_full>Uztura bagātinātāji &gt;&gt; Vitamīni &gt;&gt; Veselība &gt;&gt; Diētai un svara kontrolei &gt;&gt; Veselības nostiprināšanai un imūnai sistēmai &gt;&gt; Enerģijai un izturībai &gt;&gt; Visi produkti &gt;&gt; Veģetāriešiem un vegāniem &gt;&gt; Spirulīna &gt;&gt; Atlaides % &gt;&gt; Vitamīni vīriešiem &gt;&gt; Vitamīni sievietēm</category_full>
-    <category_link>https://miglavita.eu/collections/dieta</category_link>
-    <image>https://cdn.shopify.com/s/files/1/0959/3664/3415/files/ALLNUTRITION-SPIRULINA.webp?v=1766058092</image>
-    <in_stock>0</in_stock>
-    <brand>ALLNUTRITION</brand>
-    <used>0</used>
-    <adult>no</adult>
-    <over_the_counter_medicine>0</over_the_counter_medicine>
-    <delivery_latvija>2.49</delivery_latvija>
-    <delivery_days_latvija>2</delivery_days_latvija>
-  </item>
-  <item>
-    <name>Izotonisks sporta dzēriens (400 g) Orange</name>
-    <link>https://miglavita.eu/products/isotonic-sports-drink-400g?variant=52268048941399</link>
-    <price>6.69</price>
-    <category_full>Uztura bagātinātāji &gt;&gt; Vitamīni &gt;&gt; Veselība &gt;&gt; Enerģijai un izturībai &gt;&gt; Spēkam un muskuļu masai &gt;&gt; Visi produkti &gt;&gt; Elektrolīti &gt;&gt; Atlaides % &gt;&gt; Vitamīni vīriešiem &gt;&gt; Vitamīni sievietēm</category_full>
-    <category_link>https://miglavita.eu/collections/energija-izturiba</category_link>
-    <image>https://cdn.shopify.com/s/files/1/0959/3664/3415/files/ICONFITizotoniskaisdzeriens.webp?v=1766058089</image>
-    <in_stock>0</in_stock>
-    <brand>ICONFIT</brand>
-    <model>Orange</model>
-    <used>0</used>
-    <adult>no</adult>
-    <over_the_counter_medicine>0</over_the_counter_medicine>
-    <delivery_latvija>2.49</delivery_latvija>
-    <delivery_days_latvija>2</delivery_days_latvija>
-  </item>
-  <item>
     <name>Izotonisks sporta dzēriens (400 g) Grapefruit</name>
     <link>https://miglavita.eu/products/isotonic-sports-drink-400g?variant=52268048974167</link>
     <price>6.69</price>
@@ -1486,21 +1379,6 @@
     <image>https://cdn.shopify.com/s/files/1/0959/3664/3415/files/MiglaVita_Weight_loss_bundle.webp?v=1766058053</image>
     <in_stock>5</in_stock>
     <brand>Ostrovit</brand>
-    <used>0</used>
-    <adult>no</adult>
-    <over_the_counter_medicine>0</over_the_counter_medicine>
-    <delivery_latvija>2.49</delivery_latvija>
-    <delivery_days_latvija>2</delivery_days_latvija>
-  </item>
-  <item>
-    <name>MiglaVita sportistu treniņu komplekts</name>
-    <link>https://miglavita.eu/products/miglavita-athletes-performance-set?variant=52294733791575</link>
-    <price>45.99</price>
-    <category_full>Uztura bagātinātāji &gt;&gt; Vitamīni &gt;&gt; Veselība &gt;&gt; Enerģijai un izturībai &gt;&gt; Spēkam un muskuļu masai &gt;&gt; Visi produkti &gt;&gt; Proteīns &gt;&gt; Kreatīns &gt;&gt; Atlaides % &gt;&gt; Komplekti &gt;&gt; Vitamīni sievietēm</category_full>
-    <category_link>https://miglavita.eu/collections/energija-izturiba</category_link>
-    <image>https://cdn.shopify.com/s/files/1/0959/3664/3415/files/MiglaVita_Athletes_bundle.webp?v=1766058049</image>
-    <in_stock>0</in_stock>
-    <brand>ICONFIT</brand>
     <used>0</used>
     <adult>no</adult>
     <over_the_counter_medicine>0</over_the_counter_medicine>
