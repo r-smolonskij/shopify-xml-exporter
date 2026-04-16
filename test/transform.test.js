@@ -169,6 +169,42 @@ test('excludes MiglaVita brand products from XML feed items', () => {
   assert.equal(items[0].brand, 'Other Brand');
 });
 
+test('excludes variants with zero inventory from XML feed items', () => {
+  const items = productsToFeedItems([{
+    title: 'Zero Stock Product',
+    handle: 'zero-stock-product',
+    vendor: 'Other Brand',
+    productType: 'Supplements',
+    images: { nodes: [{ url: 'https://cdn.example.lv/zero.jpg' }] },
+    variants: {
+      nodes: [{
+        id: 'gid://shopify/ProductVariant/999',
+        title: 'Default Title',
+        price: '9.99',
+        inventoryQuantity: 0,
+      }],
+    },
+  }, {
+    title: 'In Stock Product',
+    handle: 'in-stock-product',
+    vendor: 'Other Brand',
+    productType: 'Supplements',
+    images: { nodes: [{ url: 'https://cdn.example.lv/in-stock.jpg' }] },
+    variants: {
+      nodes: [{
+        id: 'gid://shopify/ProductVariant/1000',
+        title: 'Default Title',
+        price: '19.99',
+        inventoryQuantity: 1,
+      }],
+    },
+  }], config);
+
+  assert.equal(items.length, 1);
+  assert.equal(items[0].name, 'In Stock Product');
+  assert.equal(items[0].in_stock, '1');
+});
+
 test('maps Shopify REST-shaped product data to XML feed items', () => {
   const items = productsToFeedItems([{
     title: 'Acme Table',

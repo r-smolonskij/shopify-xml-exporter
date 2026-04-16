@@ -14,6 +14,7 @@ export function productsToFeedItems(products, config) {
 
     return variants
       .map((variant) => productVariantToFeedItem(product, variant, config))
+      .filter((item) => hasStock(item.in_stock))
       .filter((item) => item.brand !== 'MiglaVita');
   });
 }
@@ -252,6 +253,16 @@ function truncate(value, maxLength) {
 
 function numberOrEmpty(value) {
   return Number.isFinite(value) ? String(value) : '';
+}
+
+function hasStock(value) {
+  if (value === '' || value === null || value === undefined) {
+    return true;
+  }
+
+  const stock = Number(value);
+
+  return Number.isFinite(stock) && stock > 0;
 }
 
 function compact(values) {
