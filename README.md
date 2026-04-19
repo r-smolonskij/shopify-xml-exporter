@@ -68,7 +68,7 @@ The feeds are available at:
 ```
 
 On Vercel, both XML files are refreshed by a cron job that calls `GET /api/cron/refresh`.
-Vercel cron schedules run in UTC, so the current schedule is `* * * * *` (every minute).
+Vercel cron schedules run in UTC, so the current schedule is `1 18 * * *` (18:01 UTC daily).
 If you want a different time, update `crons` in [`vercel.json`](vercel.json).
 If the feed cache is empty, visiting `/miglavita_salidzini.xml` or `/miglavita_kurpirkt.xml` triggers an on-demand refresh and then serves the generated XML.
 The first request can take longer while the feed is being rebuilt.
