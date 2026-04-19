@@ -14,7 +14,7 @@ let refreshInProgress = false;
 export async function handleRequest(request, response) {
   const url = new URL(request.url, `http://${request.headers.host}`);
 
-  if (url.pathname === '/api/cron/refresh') {
+  if (isCronRefreshPath(url.pathname)) {
     await handleCronRefresh(request, response);
     return;
   }
@@ -89,6 +89,10 @@ export async function handleRequest(request, response) {
 }
 
 export default handleRequest;
+
+function isCronRefreshPath(pathname) {
+  return /^\/api\/cron\/refresh(?:\/[^/]+)?$/.test(pathname);
+}
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const server = createServer(handleRequest);
@@ -210,13 +214,28 @@ async function handleCronRefresh(request, response) {
 }
 
 export function isAuthorizedCronRequest(request, env = process.env) {
-  const secret = env.CRON_SECRET;
+  if (isVercelCronRequest(request)) {
+    return true;
+  }
 
+  const secret = env.CRON_SECRET;
   if (!secret) {
     return false;
   }
 
-  return request.headers.authorization === `Bearer ${secret}`;
+  return extractCronSecretFromPath(request) === secret;
+}
+
+function isVercelCronRequest(request) {
+  const userAgent = request.headers['user-agent'];
+  return userAgent === 'vercel-cron/1.0';
+}
+
+function extractCronSecretFromPath(request) {
+  const host = request.headers.host || 'localhost';
+  const url = new URL(request.url || '/', `http://${host}`);
+  const match = url.pathname.match(/^\/api\/cron\/refresh\/([^/]+)$/);
+  return match ? decodeURIComponent(match[1]) : null;
 }
 
 function nextRefreshDate(time, now) {

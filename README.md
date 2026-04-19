@@ -21,7 +21,7 @@ Fill `.env`:
 - `SALIDZINI_OUTPUT_FILE`: Salidzini XML output file. Default is `public/miglavita_salidzini.xml`.
 - `KURPIRKT_OUTPUT_FILE`: Kurpirkt XML output file. Default is `public/miglavita_kurpirkt.xml`.
 - `FEED_REFRESH_TIME`: daily server refresh time in `HH:mm` format. Default is `05:00`.
-- `CRON_SECRET`: shared secret used by the Vercel cron endpoint.
+- `CRON_SECRET`: optional shared secret for manual calls to the cron endpoint.
 
 The exporter uses the GraphQL `products` query with `status:active published_status:published`. The app config must include `read_products` and `read_translations` in `[access_scopes].scopes`.
 
@@ -75,8 +75,9 @@ The first request can take longer while the feed is being rebuilt.
 
 Before each export or refresh, the app exchanges the app secret for a short-lived Admin API access token using `POST /admin/oauth/access_token`.
 
-The refresh endpoint requires `Authorization: Bearer $CRON_SECRET`.
-Set `CRON_SECRET` in your Vercel environment before enabling the cron job.
+The refresh endpoint accepts Vercel cron requests (user-agent `vercel-cron/1.0`) without a secret.
+Manual requests require the secret in the path:
+`/api/cron/refresh/$CRON_SECRET`
 
 ## XML Fields
 
