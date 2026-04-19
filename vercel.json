@@ -13,7 +13,7 @@
   "crons": [
     {
       "path": "/api/cron/refresh",
-      "schedule": "0 5 * * *"
+      "schedule": "* * * * *"
     }
   ],
   "routes": [
