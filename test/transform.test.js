@@ -67,7 +67,7 @@ test('maps Shopify product variants to XML feed items', () => {
     used: '0',
     adult: 'no',
     over_the_counter_medicine: '0',
-    delivery_latvija: '2.49',
+    delivery_latvija: '0',
     delivery_days_latvija: '2',
   });
 
@@ -240,7 +240,7 @@ test('maps Shopify REST-shaped product data to XML feed items', () => {
     used: '0',
     adult: 'no',
     over_the_counter_medicine: '0',
-    delivery_latvija: '2.49',
+    delivery_latvija: '0',
     delivery_days_latvija: '2',
   });
 
@@ -257,7 +257,7 @@ test('maps feed items to Kurpirkt XML item shape', () => {
     category_full: 'Sakaru līdzekļi > Mobilie telefoni',
     category_link: 'https://www.example.lv/page.php?cat=12',
     in_stock: '5',
-    delivery_latvija: '2.49',
+    delivery_latvija: '0',
     used: '0',
     adult: 'no',
   }]);

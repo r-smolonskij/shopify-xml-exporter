@@ -76,7 +76,7 @@ function productVariantToFeedItem(product, variant, config) {
     used: config.defaults.used,
     adult: config.defaults.adult,
     over_the_counter_medicine: config.defaults.overTheCounterMedicine,
-    delivery_latvija: '2.49',
+    delivery_latvija: '0',
     delivery_days_latvija: '2',
   }, ['image']);
 }
